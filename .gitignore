@@ -1,0 +1,55 @@
+.venv/
+__pycache__/
+*.pyc
+build/
+data/
+dist/
+*.spec
+
+# Local IDE and evaluation state
+.idea/
+.vscode/
+.jbeval/
+.DS_Store
+Thumbs.db
+
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+*.jks
+*.log
+
+# Generated task data, source backups and diagnostics
+/tasks/
+/backups/
+/examples/
+/pending/
+/suggestions/
+/review/
+/raw/
+/prompts/
+/responses/
+analysis.json
+suggestions.json
+review.json
+review.md
+local.json
+preview.json
+receipt.json
+manifest.json
+server.lock
+connection-diagnostic.json
+changes.diff
+git.diff
+tool.diff
+
+# Publish reviewed installers separately from source
+*.exe
+*.zip

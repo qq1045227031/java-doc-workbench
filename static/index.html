@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Java 说明工作台</title><link rel="stylesheet" href="/style.css">
+  <script nonce="__TOKEN__">window.WORKBENCH_TOKEN="__TOKEN__";</script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+<aside class="sidebar">
+  <a class="brand" href="/"><span class="brand-icon">J<span>↗</span></span><span>Java 说明工作台<small>DESCRIPTION WORKBENCH</small></span></a>
+  <div class="local-badge"><span class="dot"></span>本机运行 · 文件由你掌握</div>
+  <div class="nav-caption">工作流程</div>
+  <nav id="steps">
+    <button data-step="scan" class="nav-button active"><span>01</span>扫描分析<i>›</i></button>
+    <button data-step="model" class="nav-button"><span>02</span>模型建议<i>›</i></button>
+    <button data-step="review" class="nav-button"><span>03</span>对比与审核<i>›</i></button>
+    <button data-step="apply" class="nav-button"><span>04</span>预览与落地<i>›</i></button>
+  </nav>
+  <div class="nav-caption task-heading">本机任务<button id="refresh-tasks" title="刷新任务列表">↻</button></div>
+  <div id="task-list" class="task-list"></div>
+  <button id="import-task" class="sidebar-import">＋ 导入接力文件包</button>
+  <div class="sidebar-footer">每一步都可以保存、带走、继续。<br><span id="version">v1.1.1</span></div>
+</aside>
+<main>
+  <header class="topbar"><div id="breadcrumb">工作流程 / 扫描分析</div><div class="toolbar"><span id="task-badge">尚未选择任务</span><button id="export-task" class="button secondary small" disabled>导出接力包 ↗</button></div></header>
+  <section class="content">
+    <div id="global-progress" class="progress-card hidden"><span class="spinner"></span><div><strong id="progress-text">处理中</strong><small id="progress-detail"></small></div><button id="cancel-job" class="button secondary small">停止生成</button></div>
+    <section id="pane-scan" class="pane">
+      <div class="page-title"><div class="eyebrow">STEP 01 / DISCOVER</div><h1>让代码的意图，更清楚一点。</h1><p>从源码找出缺失的说明，把生成、审核和写入分开掌握。</p></div>
+      <div class="workflow-strip"><div><b>01</b><span>扫描源码<small>生成分析文件</small></span></div><i>→</i><div><b>02</b><span>模型建议<small>支持公开 API</small></span></div><i>→</i><div><b>03</b><span>人工审核<small>逐项决定采用</small></span></div><i>→</i><div><b>04</b><span>预览落地<small>Git 对比与备份</small></span></div></div>
+      <div class="scan-layout"><form id="scan-form" class="card">
+        <div class="card-title"><h2>项目与扫描范围</h2><span class="pill">不修改源码</span></div>
+        <label>任务名称<input id="scan-title" placeholder="例如：人员管理接口说明补全" maxlength="120"></label>
+        <label>项目根目录<input id="project-root" placeholder="例如：D:\Projects\demo-service" required><small>填写本机的绝对路径。其他电脑可以仅导入分析文件，无须项目源码。</small></label>
+        <label>Java 扫描目录<textarea id="source-roots" rows="3" placeholder="src/main/java&#10;demo-domain/src/main/java"></textarea><small>每行一个相对目录；留空扫描项目内的 Java 文件，自动排除 target、build 等目录。</small></label>
+        <fieldset><legend>生成内容</legend><div class="mode-options"><label class="mode-card"><input type="checkbox" id="mode-swagger" checked><span><strong>Swagger 说明</strong><small>模块、接口摘要、实体字段</small></span></label><label class="mode-card"><input type="checkbox" id="mode-javadoc" checked><span><strong>JavaDoc 注释</strong><small>类、方法、字段文档注释</small></span></label></div></fieldset>
+        <label>OpenAPI 3 JSON 地址 <span class="optional">可选</span><input id="openapi-url" placeholder="http://127.0.0.1:8080/v3/api-docs"></label>
+        <div class="file-row"><label class="button secondary small file-button">或选择本地 JSON<input id="openapi-file" type="file" accept=".json,application/json" hidden></label><span id="openapi-filename">未选择文件</span><button id="clear-openapi" class="text-button" type="button">清除</button></div>
+        <p class="hint">字段说明依据 OpenAPI 定位；未提供时仍可扫描 Controller、接口及 JavaDoc。</p>
+        <label class="check-line"><input id="include-snippets" type="checkbox" checked><span>分析包中包含源码片段，供模型参考<small>片段会随任务包转移，调用公开模型时发送；可在审核页查看每项内容。</small></span></label>
+        <div class="form-footer"><span>已有非空说明与已有 JavaDoc 保留</span><button class="button primary" id="scan-submit" type="submit">开始扫描 <span>→</span></button></div>
+      </form><aside class="scan-aside"><div class="note-card"><span class="note-symbol">↗</span><h3>不必在同一台电脑完成</h3><p>A 电脑扫描后导出分析包。B 电脑导入、调用模型、审核，再把文件包带回 A 电脑落地。</p><div class="mini-route">源码电脑 <b>→</b> 模型电脑 <b>→</b> 源码电脑</div></div><div class="card compact"><h3>先体验完整流程</h3><p>创建独立的示例项目和 Git 基线，体验扫描与落地。不会触碰你的业务项目。</p><button id="demo-button" class="button secondary">创建隔离示例</button></div><div class="aside-fact"><span>✓</span><p>扫描只读，写入前检查 Git<br>每批建议自动保存，可继续生成</p></div></aside></div>
+    </section>
+    <section id="pane-model" class="pane hidden">
+      <div class="page-title"><div class="eyebrow">STEP 02 / GENERATE</div><h1>给说明，一个可审核的起点。</h1><p>优先接入 DeepSeek，也支持其他兼容 API 和本地 Ollama。换模型再次生成，可在下一步并排比较。</p></div>
+      <div id="model-empty" class="empty-state">先扫描项目，或导入其他电脑生成的分析包。</div>
+      <div class="needs-task"><div id="model-summary" class="stats-row"></div><div class="stage-downloads"><span>独立阶段文件</span><button class="button secondary small" data-stage-file="analysis.json">下载分析 JSON</button><button class="button secondary small" data-stage-file="suggestions.json">下载模型建议 JSON</button><button class="button secondary small" data-stage-file="review.json">下载审核 JSON</button></div><div class="model-layout"><form id="model-form" class="card">
+        <div class="card-title"><h2>模型连接</h2><span class="pill">密钥不保存</span></div>
+        <label>服务类型<select id="provider"><option value="deepseek">DeepSeek 官方 API</option><option value="compatible">其他兼容 API（通义 / 硅基流动等）</option><option value="ollama">Ollama 本机服务</option></select></label>
+        <label>API 基础地址<input id="api-base" type="url" value="https://api.deepseek.com" required><small>填写服务商的基础地址，可带 /v1；程序会补全调用路径。</small></label>
+        <label>模型名称<input id="model-name" value="deepseek-flash" required><small>按服务商当前支持的模型填写，不同名称的结果分别保留。</small></label>
+        <label>API Key<input id="api-key" type="password" autocomplete="off" placeholder="仅用于本次运行，不写入文件或浏览器存储"></label>
+        <label>本次生成范围<select id="generation-kind"><option value="">所有说明项</option><option value="swagger">仅 Swagger 说明</option><option value="javadoc">仅 JavaDoc 注释</option></select></label>
+        <div class="form-grid"><label>每批条数<input id="batch-size" type="number" min="1" max="20" value="5"></label><label class="check-line"><input id="json-mode" type="checkbox" checked>启用 JSON 输出模式</label></div>
+        <div class="form-grid"><label>网络连接方式<select id="proxy-mode"><option value="system">跟随系统 / 环境代理</option><option value="direct">直接连接（不使用代理）</option></select></label><label>生成超时（秒）<input id="timeout-seconds" type="number" min="15" max="600" value="180"></label></div>
+        <p class="hint">公开 API 调用会产生服务商费用。只发送分析项及其携带的源码片段，不上传整个项目。默认每批 5 项，失败批次可重试。</p>
+        <div class="action-row"><button id="test-connection" type="button" class="button secondary">测试连接（不发送源码）</button><button id="download-diagnostic" type="button" class="button secondary hidden">导出脱敏诊断</button></div>
+        <div id="connection-result" class="status-panel hidden" role="status"></div>
+        <div class="form-footer"><span>同模型续跑，跳过已完成项</span><button class="button primary" type="submit">生成 / 继续建议 →</button></div>
+      </form><div><div class="card"><h2>已保存的模型结果</h2><div id="model-runs"></div></div><div class="note-card model-note"><h3>生成与采用分开</h3><p>模型生成的建议默认不采用。可以对比不同模型、修改说明，再逐项勾选。模型理由仅作参考，业务含义由你确认。</p></div></div></div></div>
+    </section>
+    <section id="pane-review" class="pane hidden">
+      <div class="page-title review-title"><div><div class="eyebrow">STEP 03 / REVIEW</div><h1>把最后的判断，留给你。</h1><p>比较模型建议，修改最终说明，再决定是否写入。</p></div><div><button id="download-review" class="button secondary">导出审核 Markdown</button><label class="button secondary file-button">导入审核表<input id="review-file" type="file" accept=".md" hidden></label></div></div>
+      <div id="review-empty" class="empty-state">选择一个任务开始审核。</div><div class="needs-task">
+      <div class="status-panel review-help"><strong>左侧是模型建议，右侧“实际写入内容”才会落地到源码。</strong><p>点击“采用此建议”即可填入并勾选；右侧仍可手动修改。批量采用保留已填写内容，空白项自动填入唯一建议；多个不同建议需选择来源模型。</p></div>
+      <div class="review-controls"><input id="review-search" placeholder="搜索类、方法、字段或文件…" aria-label="搜索审核项"><select id="review-kind" aria-label="说明类型"><option value="">所有类型</option><option value="controllerTag">Swagger 模块</option><option value="operation">Swagger 接口</option><option value="schemaField">Swagger 字段</option><option value="javadoc">JavaDoc</option></select><select id="review-status" aria-label="采用状态"><option value="">所有状态</option><option value="yes">已采用</option><option value="no">未采用</option></select><span id="review-count"></span><select id="batch-source" aria-label="批量采用来源"><option value="auto">唯一建议自动填入</option></select><button id="adopt-visible" class="button secondary small">采用当前页</button><button id="adopt-all" class="button primary small">采用全部</button><button id="reject-visible" class="text-button">取消当前页采用</button></div>
+      <div id="batch-result" class="status-panel hidden" role="status"></div>
+      <div id="review-items"></div><div class="pagination"><button id="prev-page" class="button secondary small">← 上一页</button><span id="page-count"></span><button id="next-page" class="button secondary small">下一页 →</button><span id="save-state">更改自动保存</span></div>
+      <details class="card scan-details"><summary>扫描警告与无法定位项 <span id="warning-count"></span></summary><pre id="scan-warnings"></pre></details>
+      </div>
+    </section>
+    <section id="pane-apply" class="pane hidden">
+      <div class="page-title"><div class="eyebrow">STEP 04 / APPLY</div><h1>看清每一行，再写入。</h1><p>建议先提交已有修改，便于对比。Git 状态仅作提醒，确认提示后仍可写入；工具不自动提交。</p></div>
+      <div id="apply-empty" class="empty-state">选择一个完成审核的任务。</div><div class="needs-task">
+        <div class="card"><div class="card-title"><h2>本机落地位置</h2><span id="adopted-count" class="pill"></span></div><label>项目根目录<input id="apply-root" placeholder="导入任务后，请重新填写本机源码项目路径"></label><div class="action-row"><button id="git-check" class="button secondary">检查 Git 状态</button><button id="preview-button" class="button primary">生成源码差异预览 →</button></div><div id="git-status" class="status-panel">Git 检查只作提醒；即使有未提交改动，也可以在最后确认框中确认后写入。</div></div>
+        <div id="preview-panel" class="hidden"><div class="section-bar"><h2>本次源码差异</h2><button id="download-diff" class="button secondary small">下载 diff</button></div><div id="preview-errors"></div><div id="preview-files"></div><div class="apply-footer"><p>已核对差异后再写入。将保存原文件备份，并再次校验源码指纹与 Git 状态。</p><button id="apply-button" class="button primary" disabled>写入已审核说明</button></div></div>
+        <div id="receipt-panel" class="hidden"><div class="section-bar"><h2>写入记录与 Git diff</h2><button id="download-git-diff" class="button secondary small">下载 Git diff</button></div><div id="receipt-message" class="status-panel success"></div><p id="git-diff-note" class="hint"></p><pre id="git-diff" class="diff-view"></pre><details class="diff-card" open><summary>本次变更 diff（仅本工具的修改，包含未跟踪文件）</summary><pre id="tool-diff" class="diff-view"></pre></details><button id="download-tool-diff" class="button secondary small">下载本次变更 diff</button></div>
+        <div class="card history-card"><h2>本任务写入记录</h2><div id="receipt-list"></div><p class="hint">恢复仅作用于本工具写入的文件。后续编辑、暂存或提交过的文件不会自动覆盖；此时请使用 Git 处理。</p></div>
+      </div>
+    </section>
+    <footer class="content-footer"><span>JAVA DESCRIPTION WORKBENCH</span><span>分析 · 生成 · 审核 · 落地</span></footer>
+  </section>
+</main>
+<div id="toast" role="status" class="toast hidden"></div>
+<input id="bundle-file" type="file" accept=".zip,.json" hidden>
+<dialog id="confirm-dialog"><h2>确认写入源码</h2><p id="confirm-description"></p><p>将修改本机 Java 文件，保留写入前的原文件备份，不执行 Git 提交。写入后请继续编译并验证接口文档。</p><div id="git-warning-confirm" class="status-panel warning hidden"><p id="git-warning-detail"></p><label class="check-line"><input id="acknowledge-git-warning" type="checkbox">我已知晓 Git 提醒，仍继续本次写入</label></div><div class="action-row"><button id="confirm-cancel" class="button secondary">返回检查</button><button id="confirm-apply" class="button primary">确认写入</button></div></dialog>
+<dialog id="adopt-all-dialog"><h2>采用整个任务的说明</h2><p id="adopt-all-description"></p><p>包含其他页和当前筛选之外的项目。保留已填写文本；空白项根据所选来源填入建议，存在分歧、缺失或校验错误的项会跳过并列明原因。</p><p>此操作只保存审核选择，不会写入源码。</p><div class="action-row"><button id="adopt-all-cancel" class="button secondary">返回检查</button><button id="adopt-all-confirm" class="button primary">确认采用全部</button></div></dialog>
+</body></html>
